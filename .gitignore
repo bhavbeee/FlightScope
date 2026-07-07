@@ -1,3 +1,46 @@
+# Large Data Files & Archives
 *.csv
 *.parquet
 *.zip
+*.db
+*.sqlite
+*.sqlite3
+data/flights.db
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+bin/
+include/
+lib/
+share/
+pyvenv.cfg
+
+# Python Cache & Compiled Files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# IDE Settings
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# OS Files
+Thumbs.db
+EHthumbs.db
+.DS_Store
