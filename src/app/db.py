@@ -24,7 +24,7 @@ def get_airlines():
     finally:
         conn.close()
 
-def _build_where_clause(airport=None, airline=None, season=None):
+def _build_where_clause(airport=None, airline=None, season=None, month=None, date=None):
     """Helper to construct WHERE clause filters dynamically using positional parameters."""
     conditions = []
     params = []
@@ -43,6 +43,14 @@ def _build_where_clause(airport=None, airline=None, season=None):
         if season in season_map:
             conditions.append("Season = ?")
             params.append(season_map[season])
+            
+    if month:
+        conditions.append("Month = ?")
+        params.append(int(month))
+        
+    if date:
+        conditions.append("CAST(FlightDate AS STRING) = ?")
+        params.append(date)
             
     where_clause = " WHERE " + " AND ".join(conditions) if conditions else ""
     return where_clause, params
@@ -227,5 +235,47 @@ def get_network_data(airline=None, season=None):
         df_nodes = df_nodes.merge(centrality_df, on='faa', how='inner')
         
         return df_edges, df_nodes
+    finally:
+        conn.close()
+
+def get_delay_causes(airline=None, season=None, month=None, date=None):
+    """
+    Returns the total minutes for each of the 5 main delay causes,
+    grouped by Delay Severity (Minor < 45m, Major >= 45m).
+    """
+    conn = get_db_connection()
+    try:
+        where_clause, params = _build_where_clause(airline=airline, season=season, month=month, date=date)
+        
+        query = f"""
+            SELECT 
+                CASE WHEN CAST(ArrDelayMinutes AS FLOAT) >= 45 THEN 'Major' ELSE 'Minor' END AS Severity,
+                SUM(CAST(CarrierDelay AS FLOAT)) AS CarrierDelay,
+                SUM(CAST(WeatherDelay AS FLOAT)) AS WeatherDelay,
+                SUM(CAST(NASDelay AS FLOAT)) AS NASDelay,
+                SUM(CAST(SecurityDelay AS FLOAT)) AS SecurityDelay,
+                SUM(CAST(LateAircraftDelay AS FLOAT)) AS LateAircraftDelay
+            FROM flights
+            {where_clause}
+            GROUP BY CASE WHEN CAST(ArrDelayMinutes AS FLOAT) >= 45 THEN 'Major' ELSE 'Minor' END
+        """
+        df = conn.execute(query, params).df()
+        
+        result = {
+            'Minor': {"CarrierDelay": 0, "WeatherDelay": 0, "NASDelay": 0, "SecurityDelay": 0, "LateAircraftDelay": 0},
+            'Major': {"CarrierDelay": 0, "WeatherDelay": 0, "NASDelay": 0, "SecurityDelay": 0, "LateAircraftDelay": 0}
+        }
+        
+        if not df.empty:
+            for _, row in df.iterrows():
+                sev = row['Severity']
+                if sev in result:
+                    result[sev]["CarrierDelay"] = row["CarrierDelay"] if pd.notna(row["CarrierDelay"]) else 0
+                    result[sev]["WeatherDelay"] = row["WeatherDelay"] if pd.notna(row["WeatherDelay"]) else 0
+                    result[sev]["NASDelay"] = row["NASDelay"] if pd.notna(row["NASDelay"]) else 0
+                    result[sev]["SecurityDelay"] = row["SecurityDelay"] if pd.notna(row["SecurityDelay"]) else 0
+                    result[sev]["LateAircraftDelay"] = row["LateAircraftDelay"] if pd.notna(row["LateAircraftDelay"]) else 0
+                    
+        return result
     finally:
         conn.close()
