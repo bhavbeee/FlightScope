@@ -3,6 +3,7 @@ import sys
 import dash
 from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
+import dash_bootstrap_components as dbc
 
 # Ensure project root is on PATH
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
@@ -47,7 +48,16 @@ app.layout = html.Div([
     ),
     
     # Page Content Container
-    dbc.Container(id="page-content", fluid=True, className="px-4 pb-5")
+    dbc.Container(
+        id="page-content",
+        fluid=True,
+        className="px-2",
+        style={
+            "minHeight": "100vh",
+            "overflowY": "auto",
+            "overflowX": "hidden"
+        }
+    )
 ])
 
 # Page Routing Callback
@@ -95,3 +105,5 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8050))
     print(f"Starting FlightScope Dash server on http://127.0.0.1:{port} ...")
     app.run(debug=True, port=port)
+
+
