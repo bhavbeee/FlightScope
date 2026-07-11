@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import pandas as pd
 
-from src.app.db import get_airlines, get_airport_list, get_network_data, get_states
+from src.app.db import get_airlines, get_airport_list, get_network_data
 
 try:
     dash.register_page(__name__, path="/network-explorer", name="Air Traffic Network Explorer")
