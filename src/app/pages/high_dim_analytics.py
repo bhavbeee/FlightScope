@@ -1,107 +1,123 @@
-# 4.5 High-Dimensional Flight Analytics
-import dash
-from dash import dcc, html, Input, Output, callback
+from dash import html, dcc, callback, Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
+import duckdb
+import pandas as pd
+from src.pipeline.config import DB_PATH
 
-from src.app.db import get_airlines, get_pca_sample
+def get_umap_data(month=None):
+    """Fetches a sample of flights, filtered by month if requested."""
+    conn = duckdb.connect(DB_PATH, read_only=True)
+    
+    base_query = """
+        SELECT UMAP_1, UMAP_2, UMAP_3, Origin_Dep_Congestion, Operating_Airline, ArrDelay, Month,
+               TaxiOut, DepDelay, Distance, AirTime
+        FROM flights 
+        WHERE UMAP_1 IS NOT NULL AND UMAP_2 IS NOT NULL AND UMAP_3 IS NOT NULL
+    """
+    
+    # The Month Slider filter
+    if month:
+        base_query += f" AND Month = {month}"
+        
+    # Updated to 5000 to perfectly match Anushka's instructions!
+    base_query += " USING SAMPLE 5000" 
+    
+    df = conn.execute(base_query).df()
+    conn.close()
+    return df
 
-try:
-    dash.register_page(__name__, path="/high-dim-analytics", name="High-Dimensional Analytics")
-except Exception:
-    pass
-
-MONTHS = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-
-
-def get_layout():
-    airlines = get_airlines()
-    airline_options = [{"label": "All Airlines", "value": ""}] + [
-        {"label": carrier, "value": carrier} for carrier in airlines
-    ]
-
+# Build the layout with the Slider and Graph placeholders
+def create_layout():
     return dbc.Container([
         html.H3("High-Dimensional Analytics", className="mt-4 mb-3 text-primary"),
-        html.P(
-            "Visualizing dimensional reduction (PCA) to identify hidden clusters in flight delays and systemic congestion.",
-            className="text-muted"
-        ),
-
-        dbc.Row([
-            dbc.Col([
-                html.Label("Airline"),
-                dcc.Dropdown(id="hd-airline-dropdown", options=airline_options, value="", clearable=False),
-            ], width=4),
-            dbc.Col([
-                html.Label("Season"),
-                dcc.Dropdown(
-                    id="hd-season-dropdown",
-                    options=[
-                        {"label": "All Seasons", "value": ""},
-                        {"label": "Winter (Dec-Feb)", "value": "Winter"},
-                        {"label": "Spring (Mar-May)", "value": "Spring"},
-                        {"label": "Summer (Jun-Aug)", "value": "Summer"},
-                        {"label": "Fall (Sep-Nov)", "value": "Fall"},
-                    ],
-                    value="", clearable=False,
-                ),
-            ], width=4),
-            dbc.Col([
-                html.Label("Month"),
-                dcc.Dropdown(
-                    id="hd-month-dropdown",
-                    options=[{"label": "All Months", "value": ""}] + [
-                        {"label": MONTHS[m], "value": m} for m in range(1, 13)
-                    ],
-                    value="", clearable=False,
-                ),
-            ], width=4),
-        ], className="mb-4"),
-
+        html.P("Exploring complex delay topologies using UMAP and Parallel Coordinates.", className="text-muted"),
+        
+        # Month Slider for Interactivity
         dbc.Card([
             dbc.CardBody([
-                dcc.Graph(id="pca-scatter-plot", style={"height": "65vh"})
+                html.H6("Filter by Month:", className="mb-3"),
+                dcc.Slider(
+                    id='month-slider',
+                    min=1, max=12, step=1,
+                    marks={i: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i-1] for i in range(1, 13)},
+                    value=1, # Default to January
+                    included=False
+                )
             ])
-        ], className="shadow-sm border-0")
-    ], fluid=True)
+        ], className="shadow-sm border-0 mb-4"),
+        
+        # The UMAP Scatter Plot
+        dbc.Card([
+            dbc.CardBody([
+                dcc.Graph(id="umap-scatter-plot", style={"height": "50vh"})
+            ])
+        ], className="shadow-sm border-0 mb-4"),
+        
+        # The Parallel Coordinates Plot 
+        dbc.Card([
+            dbc.CardBody([
+                html.H5("Multivariate Delay Flow (Parallel Coordinates)", className="mb-3"),
+                dcc.Graph(id="parallel-coords-plot", style={"height": "40vh"})
+            ])
+        ], className="shadow-sm border-0 mb-4")
+        
+    ], fluid=True, style={"backgroundColor": "#0c0d12", "minHeight": "100vh", "padding": "20px"})
 
+layout = create_layout()
 
-def register_callbacks(app_ignored):
-    """Placeholder for legacy multi-page wiring (callback is registered globally via @callback)."""
-    pass
-
-
+# The Callback makes the graphs react to the slider dynamically
 @callback(
-    Output("pca-scatter-plot", "figure"),
-    [
-        Input("hd-airline-dropdown", "value"),
-        Input("hd-season-dropdown", "value"),
-        Input("hd-month-dropdown", "value"),
-    ]
+    Output("umap-scatter-plot", "figure"),
+    Output("parallel-coords-plot", "figure"),
+    Input("month-slider", "value")
 )
-def update_pca_scatter(airline, season, month):
-    df = get_pca_sample(airline=airline, season=season, month=month, sample_size=5000)
-
-    fig = px.scatter(
-        df,
-        x='PCA_1',
-        y='PCA_2',
+def update_graphs(selected_month):
+    df = get_umap_data(selected_month)
+    
+    # 1. Update UMAP Figure to 3D (High Contrast Dark Theme)
+    umap_fig = px.scatter_3d(
+        df, x='UMAP_1', y='UMAP_2', z='UMAP_3',
         color='Origin_Dep_Congestion',
-        hover_data=['Marketing_Airline_Network', 'ArrDelay'],
-        title="Flight Delay Clusters (Principal Component Analysis)",
-        color_continuous_scale="Plasma",
-        labels={'Origin_Dep_Congestion': 'Airport Congestion Score'},
-        opacity=0.7
+        hover_data=['Operating_Airline', 'ArrDelay'],
+        title="Flight Delay Clusters (3D UMAP Embeddings)",
+        color_continuous_scale="YlOrRd", # Swapped to a bright scale
+        opacity=0.95, # Increased opacity so dots aren't washed out
+        labels={'Origin_Dep_Congestion': 'Airport Congestion'},
+        template="plotly_dark"
     )
-
-    fig.update_layout(
-        template="plotly_dark",
-        margin=dict(l=20, r=20, t=40, b=20),
+    
+    # Make the 3D dots slightly larger for better visibility
+    umap_fig.update_traces(marker=dict(size=4))
+    
+    # Brighter gridlines for better spatial awareness
+    umap_fig.update_layout(
+        margin=dict(l=0, r=0, t=40, b=0), 
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(240,240,240,0.5)"
+        plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(color="#e2e8f0"),
+        scene=dict(
+            xaxis=dict(title="Dim 1", gridcolor="#475569", backgroundcolor="rgba(0,0,0,0)"),
+            yaxis=dict(title="Dim 2", gridcolor="#475569", backgroundcolor="rgba(0,0,0,0)"),
+            zaxis=dict(title="Dim 3", gridcolor="#475569", backgroundcolor="rgba(0,0,0,0)")
+        )
     )
-
-    return fig
-
-
-layout = get_layout()
+    
+    # 2. Update Parallel Coordinates Figure (High Contrast Dark Theme)
+    pc_fig = px.parallel_coordinates(
+        df, 
+        dimensions=['Distance', 'TaxiOut', 'DepDelay', 'AirTime', 'ArrDelay'],
+        color='Origin_Dep_Congestion',
+        color_continuous_scale="YlOrRd", # Swapped to match the 3D graph
+        labels={'Origin_Dep_Congestion': 'Congestion'},
+        template="plotly_dark"
+    )
+    
+    pc_fig.update_layout(
+        margin=dict(l=40, r=40, t=40, b=20), 
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(color="#e2e8f0")
+    )
+    
+    return umap_fig, pc_fig

@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
-from sklearn.decomposition import PCA
+import umap.umap_ as umap
 from sklearn.preprocessing import StandardScaler
 from src.pipeline.config import PROCESSED_DIR
 
@@ -90,25 +90,39 @@ def build_features(df):
     df['Ground_Time_Ratio'] = np.where(df['ActualElapsedTime'] > 0, df['Total_Taxi_Time'] / df['ActualElapsedTime'], 0.0)
     df['Time_Made_Up'] = df['DepDelay'] - df['ArrDelay']
     
-    # 7. Dimensionality Reduction (PCA)
-    print("Running PCA dimensionality reduction...")
-    pca_features = [
+    
+    # 7. Dimensionality Reduction (UMAP - Memory Safe Version)
+    print("Running UMAP on a 100k subset to save memory...")
+    umap_features = [
         'Distance', 'CRSDepTime_Mins', 'CRSArrTime_Mins', 'DepDelay', 'ArrDelay', 
         'TaxiOut', 'TaxiIn', 'ActualElapsedTime', 'AirTime', 'Airline_Delay_Risk', 
         'Origin_Airport_Risk', 'Dest_Airport_Risk', 'Total_Taxi_Time', 
         'Ground_Time_Ratio', 'Time_Made_Up', 'Origin_Dep_Congestion', 'Dest_Arr_Congestion'
     ]
     
-    X_pca = df[pca_features].fillna(0).values
+    # Initialize the columns with empty data (NaN)
+    df['UMAP_1'] = np.nan
+    df['UMAP_2'] = np.nan
+    df['UMAP_3'] = np.nan
+    
+    # Grab a random subset of 300,000 flights to calculate
+    sample_idx = df.sample(n=500000, random_state=42).index
+    
+    # Prepare only the subset for math
+    X_umap = df.loc[sample_idx, umap_features].fillna(0).values
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X_pca)
+    X_scaled = scaler.fit_transform(X_umap)
     
-    pca = PCA(n_components=2, random_state=42)
-    components = pca.fit_transform(X_scaled)
-    df['PCA_1'] = components[:, 0]
-    df['PCA_2'] = components[:, 1]
+    # Fit the UMAP model - CHANGED n_components to 3
+    reducer = umap.UMAP(n_components=3, n_jobs=-1, random_state=42)
+    components = reducer.fit_transform(X_scaled)
     
-    print(f"PCA completed. Variance explained: {round(pca.explained_variance_ratio_.sum() * 100, 2)}%")
+    # Map the 3D coordinates back into the main dataset
+    df.loc[sample_idx, 'UMAP_1'] = components[:, 0]
+    df.loc[sample_idx, 'UMAP_2'] = components[:, 1]
+    df.loc[sample_idx, 'UMAP_3'] = components[:, 2]
+    
+    print("UMAP subset completed successfully!")
     return df
 
 def run_features_generation(input_pq=None):
