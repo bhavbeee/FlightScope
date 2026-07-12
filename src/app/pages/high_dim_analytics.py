@@ -38,15 +38,14 @@ def get_umap_data(month=None, origin_state=None, dest_state=None, origin_airport
     return df
 
 def create_layout():
-    return dbc.Container([
-        dbc.Row([
-            dbc.Col([
-                html.H1("High-Dimensional Analytics", 
-                         style={"color": "#ffffff", "fontWeight": "700", "fontSize": "2.2rem", "letterSpacing": "-0.025em"}, className="mb-1"),
-                html.P("Exploring complex delay topologies using UMAP and Parallel Coordinates.", 
-                        style={"color": "#64748b", "fontSize": "1rem"}, className="mb-3"),
-            ], width=12)
-        ], className="mb-3 mt-1"),
+    return html.Div(
+        className="premium-page-container",
+        children=[
+            # ── Title ──────────────────────────────────────────────
+            html.Div([
+                html.H1("High-Dimensional Analytics", className="premium-title"),
+                html.P("Exploring complex delay topologies using UMAP and Parallel Coordinates.", className="premium-subtitle"),
+            ], className="mb-3 mt-1"),
         
         # NEW: KPI Cards Row
         # NEW: Compact KPI Bar
@@ -116,7 +115,7 @@ def create_layout():
                         ], className="d-flex justify-content-between align-items-center mb-3"),
                         dcc.Graph(id="umap-scatter-plot", style={"height": "65vh"})
                     ])
-                ], className="shadow-sm border-0 h-100", style={"backgroundColor": "#151722"})
+                ], className="premium-card h-100")
             ], width=5),
             
             # RIGHT COLUMN: Parallel Coordinates Graph
@@ -126,12 +125,12 @@ def create_layout():
                         html.H5("Multivariate Delay Flow", className="mb-3", style={"color": "#ffffff"}),
                         dcc.Graph(id="parallel-coords-plot", style={"height": "65vh"})
                     ])
-                ], className="shadow-sm border-0 h-100", style={"backgroundColor": "#151722"})
+                ], className="premium-card h-100")
             ], width=5)
             
         ], className="mb-4 align-items-stretch") 
         
-    ], fluid=True, id="aditi-view-container", style={"backgroundColor": "#0c0d12", "minHeight": "100vh", "padding": "20px"})
+    ])
 
 layout = create_layout()
 @callback(

@@ -21,7 +21,11 @@ from src.app.db import get_states, get_airport_list
 app = dash.Dash(
     __name__,
     assets_folder=os.path.join(os.path.dirname(__file__), "assets"),
-    external_stylesheets=[dbc.themes.CYBORG, dbc.icons.BOOTSTRAP],
+    external_stylesheets=[
+        dbc.themes.CYBORG, 
+        dbc.icons.BOOTSTRAP,
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    ],
     suppress_callback_exceptions=True
 )
 
@@ -100,22 +104,20 @@ app.layout = html.Div([
                 # Right side: Navigation Links
                 dbc.Nav(
                     [
-                        dbc.NavItem(dbc.NavLink("Network Explorer", href="/network-explorer", active="exact")),
-                        dbc.NavItem(dbc.NavLink("Delay Heatmap", href="/delay-heatmap", active="exact")),
-                        dbc.NavItem(dbc.NavLink("Delay Flow Sankey", href="/delay-cause-sankey", active="exact")),
-                        dbc.NavItem(dbc.NavLink("High-Dim Analytics", href="/high-dim-analytics", active="exact")),
+                        dbc.NavItem(dbc.NavLink("Network Explorer", href="/network-explorer", active="exact", className="premium-nav-link")),
+                        dbc.NavItem(dbc.NavLink("Delay Heatmap", href="/delay-heatmap", active="exact", className="premium-nav-link")),
+                        dbc.NavItem(dbc.NavLink("Delay Flow Sankey", href="/delay-cause-sankey", active="exact", className="premium-nav-link")),
+                        dbc.NavItem(dbc.NavLink("High-Dim Analytics", href="/high-dim-analytics", active="exact", className="premium-nav-link")),
                     ],
                     className="ms-auto", navbar=True
                 )
             ],
             fluid=True
         ),
-        color="#1a1d2b",
-
+        color="#16214F", # Very dark background for Navbar
         dark=True,
         sticky="top",
-        className="shadow",
-        style={"borderBottom": "1px solid #242938", "padding": "10px 20px"}
+        style={"borderBottom": "1px solid rgba(255, 255, 255, 0.05)", "padding": "10px 20px"}
     ),
     
     # Global State Store

@@ -25,8 +25,8 @@
 
 /* Filter Sections */
 .premium-filter-section {
-    background: linear-gradient(135deg, #111318 0%, #141820 100%);
-    border: 1px solid #1e293b;
+    background-color: #182353;
+    border: 1px solid var(--border) !important;
     border-radius: 12px;
     padding: 14px 18px;
     margin-bottom: 10px;
@@ -35,7 +35,7 @@
 .premium-label {
     font-size: 0.7rem;
     font-weight: 600;
-    color: #94a3b8;
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: 2px;
@@ -43,16 +43,22 @@
 
 /* KPI Cards */
 .premium-kpi-card {
-    background: linear-gradient(135deg, #151822 0%, #1a1f2e 100%);
-    border: 1px solid #242938;
-    border-radius: 10px;
+    background: var(--card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
     padding: 10px 14px;
     text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
+
+/* Specific Card Colors */
+.card-blue { background: linear-gradient(180deg, #16214F, #101A40) !important; }
+.card-purple { background: linear-gradient(180deg, #2A1E67, #1A1648) !important; }
+.card-orange { background: linear-gradient(180deg, #3C2B1C, #241A12) !important; }
 
 .premium-kpi-title {
     font-size: 0.65rem;
-    color: #64748b;
+    color: var(--text-muted) !important;
     text-transform: uppercase;
     margin: 0;
 }
@@ -60,6 +66,7 @@
 .premium-kpi-value {
     font-size: 1.25rem;
     font-weight: 700;
+    color: var(--text) !important;
     margin: 2px 0 0 0;
 }
 
@@ -101,46 +108,3 @@
 
 
 
-
-.premium-page-container {
-    background-color: #080710 !important;
-    color: #ffffff !important;
-    font-family: sans-serif !important;
-    min-height: 100vh !important;
-    padding: 20px !important;
-}
-
-
-.premium-kpi-card {
-    background-color: #0f0e1c !important;
-    border: 1px solid #1e1b4b !important;
-    border-radius: 8px !important;
-    padding: 15px 20px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 15px !important;
-    box-shadow: none !important;
-}
-
-.premium-kpi-title {
-    font-size: 10px !important;
-    color: #a1a1aa !important;
-    margin: 0 !important;
-    font-weight: bold !important;
-    text-transform: uppercase;
-}
-
-.premium-kpi-value {
-    margin: 0 !important;
-    font-size: 24px !important;
-    font-weight: 700 !important;
-    color: #ffffff !important;
-}
-
-.premium-filter-section {
-    background-color: #0f0e1c !important;
-    border: 1px solid #1e1b4b !important;
-    border-radius: 8px !important;
-    padding: 20px !important;
-    margin-bottom: 25px !important;
-}

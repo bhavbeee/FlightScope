@@ -69,7 +69,7 @@ def get_layout():
                         dcc.Slider(
                             id="network-topn-slider",
                             min=50, max=2000, step=None,
-                            marks={v: {"label": str(v), "style": {"fontSize": "0.7rem", "color": "#94a3b8"}}
+                            marks={v: {"label": str(v), "style": {"fontSize": "0.7rem", "color": "var(--text-muted)"}}
                                    for v in [50, 100, 200, 500, 1000, 2000]},
                             value=200,
                         ),
@@ -85,42 +85,42 @@ def get_layout():
 
             # ── KPI strip ─────────────────────────────────────────
             dbc.Row([
-                dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#191b28", "borderRadius": "12px", "border": "1px solid #242938"}, children=[
-                    html.Div(html.I(className="bi bi-airplane-fill", style={"fontSize": "1.5rem", "color": "#a78bfa"}), 
-                             style={"backgroundColor": "rgba(167, 139, 250, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                dbc.Col(html.Div(className="premium-kpi-card card-purple", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px"}, children=[
+                    html.Div(html.I(className="bi bi-airplane-fill", style={"fontSize": "1.5rem", "color": "var(--purple-light)"}), 
+                             style={"backgroundColor": "var(--tab-hover)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
                     html.Div([
-                        html.P("AIRPORTS", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#a78bfa"}),
-                        html.H5(id="network-kpi-airports", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
+                        html.P("AIRPORTS", className="premium-kpi-title", style={"margin": "0", "textAlign": "left"}),
+                        html.H5(id="network-kpi-airports", className="premium-kpi-value", style={"margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
                     ])
                 ]), lg=3, md=3, sm=6),
                 
-                dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#161b2a", "borderRadius": "12px", "border": "1px solid #1e293b"}, children=[
-                    html.Div(html.I(className="bi bi-diagram-3-fill", style={"fontSize": "1.5rem", "color": "#38bdf8"}), 
-                             style={"backgroundColor": "rgba(56, 189, 248, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                dbc.Col(html.Div(className="premium-kpi-card card-blue", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px"}, children=[
+                    html.Div(html.I(className="bi bi-diagram-3-fill", style={"fontSize": "1.5rem", "color": "var(--cyan)"}), 
+                             style={"backgroundColor": "rgba(75,211,255,0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
                     html.Div([
-                        html.P("ROUTES", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#38bdf8"}),
-                        html.H5(id="network-kpi-routes", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
+                        html.P("ROUTES", className="premium-kpi-title", style={"margin": "0", "textAlign": "left"}),
+                        html.H5(id="network-kpi-routes", className="premium-kpi-value", style={"margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
                     ])
                 ]), lg=3, md=3, sm=6),
                 
-                dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#1e182d", "borderRadius": "12px", "border": "1px solid #2d2442"}, children=[
-                    html.Div(html.I(className="bi bi-building", style={"fontSize": "1.5rem", "color": "#c084fc"}), 
-                             style={"backgroundColor": "rgba(192, 132, 252, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                dbc.Col(html.Div(className="premium-kpi-card card-purple", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px"}, children=[
+                    html.Div(html.I(className="bi bi-building-fill", style={"fontSize": "1.5rem", "color": "var(--purple-light)"}), 
+                             style={"backgroundColor": "var(--tab-hover)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
                     html.Div([
-                        html.P("TOP HUB (PAGERANK)", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#c084fc"}),
-                        html.H5(id="network-kpi-hub", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
+                        html.P("TOP HUB (PAGERANK)", className="premium-kpi-title", style={"margin": "0", "textAlign": "left"}),
+                        html.H5(id="network-kpi-hub", className="premium-kpi-value", style={"margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
                     ])
                 ]), lg=3, md=3, sm=6),
                 
-                dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#29211c", "borderRadius": "12px", "border": "1px solid #3d312a"}, children=[
-                    html.Div(html.I(className="bi bi-airplane-engines-fill", style={"fontSize": "1.5rem", "color": "#fbbf24"}), 
-                             style={"backgroundColor": "rgba(251, 191, 36, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                dbc.Col(html.Div(className="premium-kpi-card card-orange", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px"}, children=[
+                    html.Div(html.I(className="bi bi-airplane-engines-fill", style={"fontSize": "1.5rem", "color": "var(--orange)"}), 
+                             style={"backgroundColor": "rgba(248,161,27,0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
                     html.Div([
-                        html.P("BUSIEST ROUTE", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#fbbf24"}),
-                        html.H5(id="network-kpi-busiest", className="premium-kpi-value", style={"color": "#fbbf24", "margin": "0", "textAlign": "left", "fontSize": "1.6rem"}),
+                        html.P("BUSIEST ROUTE", className="premium-kpi-title", style={"margin": "0", "textAlign": "left"}),
+                        html.H5(id="network-kpi-busiest", className="premium-kpi-value", style={"margin": "0", "textAlign": "left", "fontSize": "1.3rem"}),
                     ])
                 ]), lg=3, md=3, sm=6),
-            ], className="g-2 mb-2"),
+            ], className="mb-4"),
 
             # ── Map ───────────────────────────────────────────────
             html.Div(

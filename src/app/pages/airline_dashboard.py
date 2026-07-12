@@ -58,39 +58,39 @@ layout = html.Div(
         ),
 
         dbc.Row([
-            dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#191b28", "borderRadius": "12px", "border": "1px solid #242938"}, children=[
-                html.Div(html.I(className="bi bi-airplane-fill", style={"fontSize": "1.5rem", "color": "#0ea5e9"}), 
-                         style={"backgroundColor": "rgba(14, 165, 233, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+            dbc.Col(html.Div(className="premium-kpi-card card-blue", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px"}, children=[
+                html.Div(html.I(className="bi bi-airplane-fill", style={"fontSize": "1.5rem", "color": "var(--cyan)"}), 
+                         style={"backgroundColor": "rgba(75,211,255,0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
                 html.Div([
-                    html.P("FLIGHTS", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#0ea5e9"}),
-                    html.H5(id="kpi_flights", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
+                    html.P("FLIGHTS", className="premium-kpi-title", style={"margin": "0", "textAlign": "left"}),
+                    html.H5(id="kpi_flights", className="premium-kpi-value", style={"margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
                 ])
             ]), width=3),
             
-            dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#161b2a", "borderRadius": "12px", "border": "1px solid #1e293b"}, children=[
-                html.Div(html.I(className="bi bi-clock-history", style={"fontSize": "1.5rem", "color": "#ef4444"}), 
-                         style={"backgroundColor": "rgba(239, 68, 68, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+            dbc.Col(html.Div(className="premium-kpi-card card-purple", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px"}, children=[
+                html.Div(html.I(className="bi bi-clock-history", style={"fontSize": "1.5rem", "color": "var(--pink)"}), 
+                         style={"backgroundColor": "rgba(240,92,191,0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
                 html.Div([
-                    html.P("AVERAGE DELAY", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#ef4444"}),
-                    html.H5(id="kpi_delay", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
+                    html.P("AVERAGE DELAY", className="premium-kpi-title", style={"margin": "0", "textAlign": "left"}),
+                    html.H5(id="kpi_delay", className="premium-kpi-value", style={"margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
                 ])
             ]), width=3),
             
-            dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#1e182d", "borderRadius": "12px", "border": "1px solid #2d2442"}, children=[
-                html.Div(html.I(className="bi bi-check-circle-fill", style={"fontSize": "1.5rem", "color": "#22c55e"}), 
-                         style={"backgroundColor": "rgba(34, 197, 94, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+            dbc.Col(html.Div(className="premium-kpi-card card-purple", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px"}, children=[
+                html.Div(html.I(className="bi bi-check-circle-fill", style={"fontSize": "1.5rem", "color": "var(--node-purple)"}), 
+                         style={"backgroundColor": "rgba(193,59,255,0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
                 html.Div([
-                    html.P("ON TIME", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#22c55e"}),
-                    html.H5(id="kpi_ontime", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
+                    html.P("ON TIME", className="premium-kpi-title", style={"margin": "0", "textAlign": "left"}),
+                    html.H5(id="kpi_ontime", className="premium-kpi-value", style={"margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
                 ])
             ]), width=3),
             
-            dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#29211c", "borderRadius": "12px", "border": "1px solid #3d312a"}, children=[
-                html.Div(html.I(className="bi bi-x-circle-fill", style={"fontSize": "1.5rem", "color": "#f97316"}), 
-                         style={"backgroundColor": "rgba(249, 115, 22, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+            dbc.Col(html.Div(className="premium-kpi-card card-orange", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px"}, children=[
+                html.Div(html.I(className="bi bi-x-circle-fill", style={"fontSize": "1.5rem", "color": "var(--orange)"}), 
+                         style={"backgroundColor": "rgba(248,161,27,0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
                 html.Div([
-                    html.P("CANCELLED", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#f97316"}),
-                    html.H5(id="kpi_cancel", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
+                    html.P("CANCELLED", className="premium-kpi-title", style={"margin": "0", "textAlign": "left"}),
+                    html.H5(id="kpi_cancel", className="premium-kpi-value", style={"margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
                 ])
             ]), width=3),
         ], className="mb-4"),

@@ -85,3 +85,91 @@
 .header-dropdown path {
     fill: currentColor !important;
 }
+
+/* FlightScope Dark Theme Color Palette */
+:root{
+  --background: #020B28;
+  --background-secondary: #13234a;
+  --panel: #151e52;
+  --card: #171942;
+  --card-blue: #16214F;
+  --card-purple: #2A1E67;
+  --card-orange: #3C2B1C;
+
+  /* Navigation Tabs */
+  --tab-active: linear-gradient(135deg, #26199D 0%, #3322AC 50%, #4A35D6 100%);
+  --tab-hover: rgba(74,53,214,0.15);
+  --tab-text: #D7D9E7;
+
+  /* Primary Accent */
+  --primary: #4A35D6;
+  --primary-dark: #26199D;
+  --accent: #8D67FF;
+  --purple-light: #B288FF;
+
+  /* Graph & Charts */
+  --cyan: #4BD3FF;
+  --yellow: #FFD53B;
+  --orange: #F8A11B;
+  --pink: #F05CBF;
+  --node-purple: #C13BFF;
+
+  /* Text */
+  --text: #FFFFFF;
+  --text-secondary: #B7BED4;
+  --text-muted: #8D95B3;
+
+  /* Borders & Shadows */
+  --border: rgba(120,120,255,0.18);
+  --shadow: 0 0 20px rgba(94,72,255,0.45);
+}
+
+body {
+    background-color: var(--background) !important;
+    color: var(--text) !important;
+}
+
+/* Force ALL Dropdowns to be dark, fixing the white background issue */
+.Select-control,
+.Select-menu-outer,
+.Select-value,
+.Select-input {
+    background-color: #273970 !important; /* Hardcoded light-blue to prevent white fallback */
+    color: #FFFFFF !important;
+    border: 1px solid rgba(120,120,255,0.3) !important;
+}
+
+.Select-value-label, .Select-placeholder {
+    color: #FFFFFF !important;
+}
+
+.dark-dropdown .Select-control {
+    background-color: #273970 !important;
+}
+
+.premium-nav-link {
+    background: transparent !important;
+    color: var(--tab-text) !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    padding: 8px 16px !important;
+    margin: 0 4px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+}
+
+.premium-nav-link:hover {
+    background: var(--tab-hover) !important;
+    color: var(--text) !important;
+}
+
+.premium-nav-link.active {
+    background: var(--tab-active) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--shadow), 0 0 40px rgba(94,72,255,0.20) !important;
+}
+
+.premium-page-container {
+    background-color: transparent !important;
+}

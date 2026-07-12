@@ -37,21 +37,25 @@ body {
     background-color: transparent !important;
 }
 
-/* Custom styles for dcc.Slider (change purple to yellow) */
+/* Custom styles for dcc.Slider */
 .rc-slider-track {
-    background-color: #eab308 !important; /* Yellow */
+    background-color: var(--accent) !important;
+}
+.rc-slider-rail {
+    background-color: #25284F !important;
 }
 .rc-slider-handle {
-    border: solid 2px #eab308 !important; /* Yellow */
+    border: solid 2px #A783FF !important;
+    background-color: var(--background) !important;
 }
 .rc-slider-handle:hover,
 .rc-slider-handle:active,
 .rc-slider-handle:focus {
-    border-color: #ca8a04 !important; /* Darker yellow on interaction */
-    box-shadow: 0 0 5px #eab308 !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 8px rgba(141, 103, 255, 0.6) !important;
 }
 .rc-slider-dot-active {
-    border-color: #eab308 !important;
+    border-color: var(--accent) !important;
 }
 
 /* Dropdown Menu Options */
