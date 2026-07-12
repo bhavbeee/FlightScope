@@ -22,12 +22,18 @@ body {
     border-radius: 6px !important;
 }
 
+/* Ensure the outer container doesn't force a white background */
+.dark-dropdown .Select,
+.header-dropdown .Select {
+    background-color: transparent !important;
+}
+
 .dark-dropdown .Select-value,
 .dark-dropdown .Select-value-label,
 .dark-dropdown .Select-placeholder,
 .dark-dropdown .Select-input,
 .dark-dropdown .Select-input input {
-    color: #1a1d2b !important;
+    color: #ffffff !important;
     background-color: transparent !important;
 }
 

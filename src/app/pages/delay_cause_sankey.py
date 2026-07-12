@@ -4,75 +4,25 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 from src.app.db import get_delay_causes, get_airlines
 
-# Explicit Premium Stylesheet Override Dictionary
-STYLES = {
-    "page_container": {
-        "backgroundColor": "#0c0d12",
-        "color": "#cbd5e1",
-        "padding": "20px 10px",
-        "minHeight": "100vh"
-    },
-    "main_title": {
-        "color": "#ffffff",
-        "fontWeight": "700",
-        "fontSize": "2.2rem",
-        "letterSpacing": "-0.025em"
-    },
-    "subtitle": {
-        "color": "#64748b",
-        "fontSize": "1rem"
-    },
-    "card": {
-        "backgroundColor": "#151722",
-        "border": "1px solid #242938",
-        "borderRadius": "12px",
-        "boxShadow": "0 4px 6px -1px rgba(0,0,0,0.2)",
-        "overflow": "hidden"
-    },
-    "card_header": {
-        "backgroundColor": "#1a1d2b",
-        "borderBottom": "1px solid #242938",
-        "padding": "12px 20px"
-    },
-    "card_header_text": {
-        "color": "#ffffff",
-        "fontWeight": "600",
-        "fontSize": "1.1rem",
-        "margin": "0"
-    },
-    "card_body": {
-        "padding": "20px"
-    },
-    "label": {
-        "color": "#94a3b8",
-        "fontWeight": "600",
-        "fontSize": "0.85rem",
-        "textTransform": "uppercase",
-        "letterSpacing": "0.05em",
-        "display": "block",
-        "marginBottom": "8px"
-    }
-}
+# Removed local STYLES dictionary in favor of assets/premium.css
 
 # Define Layout
-layout = html.Div(style=STYLES["page_container"], children=[
+layout = html.Div(className="premium-page-container", children=[
     dbc.Row([
         dbc.Col([
-            html.H1("Delay Propagation Flow", 
-                     style={"color": "#ffffff", "fontWeight": "700", "fontSize": "2.2rem", "letterSpacing": "-0.025em"}, className="mb-1"),
-            html.P("Analyze how total delayed minutes distribute into specific root causes.", 
-                    style={"color": "#64748b", "fontSize": "1rem"}, className="mb-3")
+            html.H1("Delay Propagation Flow", className="premium-title"),
+            html.P("Analyze how total delayed minutes distribute into specific root causes.", className="premium-subtitle")
         ], width=12)
     ]),
     
     dbc.Row([
         dbc.Col([
-            html.Div(style=STYLES["card"], children=[
-                html.Div(style=STYLES["card_header"], children=[
-                    html.H5("Filters & Controls", style=STYLES["card_header_text"])
-                ]),
-                html.Div(style=STYLES["card_body"], children=[
-                    html.Label("Marketing Airline", style=STYLES["label"]),
+            html.Div(className="premium-filter-section", children=[
+                html.Div([
+                    html.H5("Filters & Controls", className="premium-card-header-text")
+                ], className="mb-3"),
+                html.Div([
+                    html.Label("Marketing Airline", className="premium-label"),
                     dcc.Dropdown(
                         id="sankey-airline-filter",
                         options=[{"label": "All Airlines", "value": "ALL"}] + [{"label": a, "value": a} for a in get_airlines()],
@@ -81,7 +31,7 @@ layout = html.Div(style=STYLES["page_container"], children=[
                         className="mb-4",
                         style={"color": "#111111"}
                     ),
-                    html.Label("Season", style=STYLES["label"]),
+                    html.Label("Season", className="premium-label"),
                     dcc.Dropdown(
                         id="sankey-season-filter",
                         options=[
@@ -96,7 +46,7 @@ layout = html.Div(style=STYLES["page_container"], children=[
                         className="mb-4",
                         style={"color": "#111111"}
                     ),
-                    html.Label("Month (1-12)", style=STYLES["label"]),
+                    html.Label("Month (1-12)", className="premium-label"),
                     dcc.Slider(
                         id="sankey-month-filter",
                         min=0,
@@ -113,7 +63,7 @@ layout = html.Div(style=STYLES["page_container"], children=[
                         },
                         className="mb-4"
                     ),
-                    html.Label("Specific Date (Overrides Season/Month)", style=STYLES["label"]),
+                    html.Label("Specific Date (Overrides Season/Month)", className="premium-label"),
                     html.Div([
                         dcc.DatePickerSingle(
                             id='sankey-date-filter',
@@ -130,15 +80,15 @@ layout = html.Div(style=STYLES["page_container"], children=[
                         style={"color": "#64748b"}
                     )
                 ])
-            ], className="h-100")
+            ])
         ], xs=12, md=4, lg=3, className="mb-4"),
         
         dbc.Col([
-            html.Div(style=STYLES["card"], children=[
-                html.Div(style=STYLES["card_header"], children=[
-                    html.H5("Root Cause Flow Distribution", style=STYLES["card_header_text"])
+            html.Div(className="premium-card", children=[
+                html.Div(className="premium-card-header", children=[
+                    html.H5("Root Cause Flow Distribution", className="premium-card-header-text")
                 ]),
-                html.Div(style=STYLES["card_body"], children=[
+                html.Div(className="premium-card-body", children=[
                     dcc.Loading(
                         id="loading-sankey",
                         type="circle",
@@ -146,7 +96,7 @@ layout = html.Div(style=STYLES["page_container"], children=[
                         children=dcc.Graph(id="delay-sankey-graph", style={"height": "650px"})
                     )
                 ])
-            ], className="h-100")
+            ])
         ], xs=12, md=8, lg=9, className="mb-4")
     ], className="mb-2")
 ])
@@ -166,9 +116,10 @@ def register_callbacks(app):
          Input("sankey-season-filter", "value"),
          Input("sankey-month-filter", "value"),
          Input("sankey-date-filter", "date"),
-         Input("global-route-store", "data")]
+         Input("global-route-store", "data"),
+         Input("global-airport-store", "data")]
     )
-    def update_sankey(airline, season, month, date, route_data):
+    def update_sankey(airline, season, month, date, route_data, global_airport):
         al = None if airline == "ALL" else airline
         
         # Unpack global filters
@@ -186,6 +137,7 @@ def register_callbacks(app):
             mn = None if month == 0 else month
         
         causes = get_delay_causes(
+            airport=global_airport,
             airline=al, season=sn, month=mn, date=date,
             origin_state=o_state, dest_state=d_state,
             origin_airport=o_airport, dest_airport=d_airport

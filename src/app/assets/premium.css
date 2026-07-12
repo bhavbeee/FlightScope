@@ -1,0 +1,99 @@
+/* ── Premium Shared UI Styles ── */
+
+/* Main Page Container */
+.premium-page-container {
+    background-color: #0c0d12;
+    color: #cbd5e1;
+    padding: 12px 16px;
+    min-height: 100vh;
+}
+
+/* Typography */
+.premium-title {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 2.2rem;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.25rem;
+}
+
+.premium-subtitle {
+    color: #64748b;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Filter Sections */
+.premium-filter-section {
+    background: linear-gradient(135deg, #111318 0%, #141820 100%);
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+}
+
+.premium-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+}
+
+/* KPI Cards */
+.premium-kpi-card {
+    background: linear-gradient(135deg, #151822 0%, #1a1f2e 100%);
+    border: 1px solid #242938;
+    border-radius: 10px;
+    padding: 10px 14px;
+    text-align: center;
+}
+
+.premium-kpi-title {
+    font-size: 0.65rem;
+    color: #64748b;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.premium-kpi-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 2px 0 0 0;
+}
+
+/* Graph/Visual Containers */
+.premium-card {
+    background-color: #111318;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.premium-card-header {
+    background-color: #1a1d2b;
+    border-bottom: 1px solid #242938;
+    padding: 12px 20px;
+}
+
+.premium-card-header-text {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.premium-card-body {
+    padding: 6px;
+}
+
+/* Status Badge */
+.premium-status-badge {
+    background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%);
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 5px 16px;
+    display: inline-block;
+    font-size: 0.8rem;
+}

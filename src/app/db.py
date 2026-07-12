@@ -47,8 +47,8 @@ def _build_where_clause(airport=None, airline=None, season=None, month=None, dat
     params = []
 
     if airport:
-        conditions.append("Origin = ?")
-        params.append(airport)
+        conditions.append("(Origin = ? OR Dest = ?)")
+        params.extend([airport, airport])
     if origin_airport:
         conditions.append("Origin = ?")
         params.append(origin_airport)
@@ -510,7 +510,7 @@ def get_pca_sample(airline=None, season=None, month=None, sample_size=5000):
     finally:
         conn.close()
 
-def get_delay_causes(airline=None, season=None, month=None, date=None,
+def get_delay_causes(airport=None, airline=None, season=None, month=None, date=None,
                      origin_state=None, dest_state=None, origin_airport=None, dest_airport=None):
     """
     Returns the total minutes for each of the 5 main delay causes,
@@ -519,6 +519,7 @@ def get_delay_causes(airline=None, season=None, month=None, date=None,
     conn = get_db_connection()
     try:
         where_clause, params = _build_where_clause(
+            airport=airport,
             airline=airline, season=season, month=month, date=date,
             origin_state=origin_state, dest_state=dest_state,
             origin_airport=origin_airport, dest_airport=dest_airport

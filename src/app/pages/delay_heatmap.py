@@ -25,71 +25,7 @@ except Exception:
 DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-# Explicit Premium Stylesheet Override Dictionary
-STYLES = {
-    "page_container": {
-        "backgroundColor": "#0c0d12",
-        "color": "#cbd5e1",
-        "padding": "20px 10px",
-        "minHeight": "100vh"
-    },
-    "main_title": {
-        "color": "#ffffff",
-        "fontWeight": "700",
-        "fontSize": "2.2rem",
-        "letterSpacing": "-0.025em"
-    },
-    "subtitle": {
-        "color": "#64748b",
-        "fontSize": "1rem"
-    },
-    "card": {
-        "backgroundColor": "#151722",
-        "border": "1px solid #242938",
-        "borderRadius": "12px",
-        "boxShadow": "0 4px 6px -1px rgba(0,0,0,0.2)",
-        "overflow": "hidden"
-    },
-    "card_header": {
-        "backgroundColor": "#1a1d2b",
-        "borderBottom": "1px solid #242938",
-        "padding": "12px 20px"
-    },
-    "card_header_text": {
-        "color": "#ffffff",
-        "fontWeight": "600",
-        "fontSize": "1.1rem",
-        "margin": "0"
-    },
-    "card_body": {
-        "padding": "20px"
-    },
-    "label": {
-        "color": "#94a3b8",
-        "fontWeight": "600",
-        "fontSize": "0.85rem",
-        "textTransform": "uppercase",
-        "letterSpacing": "0.05em",
-        "display": "block",
-        "marginBottom": "8px"
-    },
-    "kpi_card": {
-        "backgroundColor": "#151722",
-        "border": "1px solid #242938",
-        "borderRadius": "10px",
-        "padding": "15px 10px",
-        "textAlign": "center",
-        "boxShadow": "0 2px 4px rgba(0,0,0,0.1)"
-    },
-    "kpi_title": {
-        "color": "#64748b",
-        "fontSize": "0.75rem",
-        "textTransform": "uppercase",
-        "letterSpacing": "0.05em",
-        "fontWeight": "700",
-        "marginBottom": "6px"
-    }
-}
+# Removed local STYLES dictionary in favor of assets/premium.css
 
 def get_layout():
     airlines = get_airlines()
@@ -100,64 +36,64 @@ def get_layout():
     airports_df = get_airport_list()
     airport_options = [{"label": f"{row['faa']} - {row['name']}", "value": row["faa"]} for _, row in airports_df.iterrows()]
     
-    return html.Div(style=STYLES["page_container"], children=[
+    return html.Div(className="premium-page-container", children=[
         
         # Header Row
         dbc.Row([
             dbc.Col([
-                html.H1("Airport Delay Heatmap & Spatial Analytics", 
-                         style={"color": "#ffffff", "fontWeight": "700", "fontSize": "2.2rem", "letterSpacing": "-0.025em"}, className="mb-1"),
-                html.P("Explore geographic delay distribution and temporal congestion patterns across U.S. domestic flights.", 
-                        style={"color": "#64748b", "fontSize": "1rem"}, className="mb-3"),
+                html.H1("Airport Delay Heatmap & Spatial Analytics", className="premium-title"),
+                html.P("Explore geographic delay distribution and temporal congestion patterns across U.S. domestic flights.", className="premium-subtitle"),
             ], width=12)
         ], className="mb-3 mt-1"),
         
         # Horizontal Filters Row
-        dbc.Row([
-            dbc.Col([
-                html.Label("Search Airport", style=STYLES["label"]),
-                dcc.Dropdown(
-                    id="airport-dropdown", options=airport_options, value=None,
-                    placeholder="Select or search...", clearable=True, searchable=True, style={"color": "#111111"}
-                ),
-            ], xs=12, md=3),
-            dbc.Col([
-                html.Label("Analysis Metric", style=STYLES["label"]),
-                dcc.Dropdown(
-                    id="metric-dropdown",
-                    options=[
-                        {"label": "Departure Delay", "value": "DepDelay"},
-                        {"label": "Arrival Delay", "value": "ArrDelay"},
-                        {"label": "Taxi-Out Time", "value": "TaxiOut"},
-                        {"label": "Taxi-In Time", "value": "TaxiIn"},
-                        {"label": "Cancellation Rate", "value": "Cancelled"},
-                    ],
-                    value="DepDelay", clearable=False, style={"color": "#111111"}
-                ),
-            ], xs=12, md=3),
-            dbc.Col([
-                html.Label("Airline Carrier", style=STYLES["label"]),
-                dcc.Dropdown(id="airline-dropdown", options=airline_options, value="", clearable=False, style={"color": "#111111"}),
-            ], xs=12, md=3),
-            dbc.Col([
-                html.Label("Season", style=STYLES["label"]),
-                dcc.Dropdown(
-                    id="season-dropdown",
-                    options=[
-                        {"label": "All Seasons", "value": ""},
-                        {"label": "Winter (Dec-Feb)", "value": "Winter"},
-                        {"label": "Spring (Mar-May)", "value": "Spring"},
-                        {"label": "Summer (Jun-Aug)", "value": "Summer"},
-                        {"label": "Fall (Sep-Nov)", "value": "Fall"},
-                    ],
-                    value="", clearable=False, style={"color": "#111111"}
-                ),
-            ], xs=12, md=2),
-            dbc.Col([
-                html.Label("Reset", style=STYLES["label"]),
-                dbc.Button("Reset", id="reset-airport-btn", color="outline-warning", size="sm", className="w-100", style={"height": "36px"})
-            ], xs=12, md=1),
-        ], className="mb-3"),
+        html.Div(className="premium-filter-section", children=[
+            dbc.Row([
+                dbc.Col([
+                    html.Label("Search Airport", className="premium-label"),
+                    dcc.Dropdown(
+                        id="airport-dropdown", options=airport_options, value=None,
+                        placeholder="Select or search...", clearable=True, searchable=True, style={"color": "#111111"}
+                    ),
+                ], xs=12, md=3),
+                dbc.Col([
+                    html.Label("Analysis Metric", className="premium-label"),
+                    dcc.Dropdown(
+                        id="metric-dropdown",
+                        options=[
+                            {"label": "Departure Delay", "value": "DepDelay"},
+                            {"label": "Arrival Delay", "value": "ArrDelay"},
+                            {"label": "Taxi-Out Time", "value": "TaxiOut"},
+                            {"label": "Taxi-In Time", "value": "TaxiIn"},
+                            {"label": "Cancellation Rate", "value": "Cancelled"},
+                        ],
+                        value="DepDelay", clearable=False, style={"color": "#111111"}
+                    ),
+                ], xs=12, md=3),
+                dbc.Col([
+                    html.Label("Airline Carrier", className="premium-label"),
+                    dcc.Dropdown(id="airline-dropdown", options=airline_options, value="", clearable=False, style={"color": "#111111"}),
+                ], xs=12, md=3),
+                dbc.Col([
+                    html.Label("Season", className="premium-label"),
+                    dcc.Dropdown(
+                        id="season-dropdown",
+                        options=[
+                            {"label": "All Seasons", "value": ""},
+                            {"label": "Winter (Dec-Feb)", "value": "Winter"},
+                            {"label": "Spring (Mar-May)", "value": "Spring"},
+                            {"label": "Summer (Jun-Aug)", "value": "Summer"},
+                            {"label": "Fall (Sep-Nov)", "value": "Fall"},
+                        ],
+                        value="", clearable=False, style={"color": "#111111"}
+                    ),
+                ], xs=12, md=2),
+                dbc.Col([
+                    html.Label("Reset", className="premium-label"),
+                    dbc.Button("Reset", id="reset-airport-btn", color="outline-warning", size="sm", className="w-100", style={"height": "36px"})
+                ], xs=12, md=1),
+            ], className="g-2")
+        ]),
         
         # Main Content Row: Left (KPIs + Map) and Right (Heatmaps)
         dbc.Row([
@@ -165,44 +101,55 @@ def get_layout():
             dbc.Col([
                 # KPI Cards Row
                 dbc.Row([
-                    dbc.Col([
-                        html.Div(style=STYLES["kpi_card"], children=[
-                            html.Div("Total Flights", style=STYLES["kpi_title"]),
-                            html.H3(id="kpi-total-flights", style={"color": "#3b82f6", "fontWeight": "700", "margin": "0", "fontSize": "1.3rem"}),
+                    dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#191b28", "borderRadius": "12px", "border": "1px solid #242938"}, children=[
+                        html.Div(html.I(className="bi bi-airplane-fill", style={"fontSize": "1.5rem", "color": "#3b82f6"}), 
+                                 style={"backgroundColor": "rgba(59, 130, 246, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                        html.Div([
+                            html.P("TOTAL FLIGHTS", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#3b82f6"}),
+                            html.H5(id="kpi-total-flights", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
                         ])
-                    ], width=3, className="pe-1"),
-                    dbc.Col([
-                        html.Div(style=STYLES["kpi_card"], children=[
-                            html.Div("Avg Dep Delay", style=STYLES["kpi_title"]),
-                            html.H3(id="kpi-avg-dep-delay", style={"color": "#f59e0b", "fontWeight": "700", "margin": "0", "fontSize": "1.3rem"}),
+                    ]), width=3, className="pe-1"),
+                    
+                    dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#29211c", "borderRadius": "12px", "border": "1px solid #3d312a"}, children=[
+                        html.Div(html.I(className="bi bi-arrow-up-right-circle-fill", style={"fontSize": "1.5rem", "color": "#f59e0b"}), 
+                                 style={"backgroundColor": "rgba(245, 158, 11, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                        html.Div([
+                            html.P("AVG DEP DELAY", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#f59e0b"}),
+                            html.H5(id="kpi-avg-dep-delay", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
                         ])
-                    ], width=3, className="px-1"),
-                    dbc.Col([
-                        html.Div(style=STYLES["kpi_card"], children=[
-                            html.Div("Avg Arr Delay", style=STYLES["kpi_title"]),
-                            html.H3(id="kpi-avg-arr-delay", style={"color": "#ec4899", "fontWeight": "700", "margin": "0", "fontSize": "1.3rem"}),
+                    ]), width=3, className="px-1"),
+                    
+                    dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#261623", "borderRadius": "12px", "border": "1px solid #3c2438"}, children=[
+                        html.Div(html.I(className="bi bi-arrow-down-right-circle-fill", style={"fontSize": "1.5rem", "color": "#ec4899"}), 
+                                 style={"backgroundColor": "rgba(236, 72, 153, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                        html.Div([
+                            html.P("AVG ARR DELAY", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#ec4899"}),
+                            html.H5(id="kpi-avg-arr-delay", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
                         ])
-                    ], width=3, className="px-1"),
-                    dbc.Col([
-                        html.Div(style=STYLES["kpi_card"], children=[
-                            html.Div("Cancel Rate", style=STYLES["kpi_title"]),
-                            html.H3(id="kpi-cancellation-rate", style={"color": "#ef4444", "fontWeight": "700", "margin": "0", "fontSize": "1.3rem"}),
+                    ]), width=3, className="px-1"),
+                    
+                    dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#27171a", "borderRadius": "12px", "border": "1px solid #3e2429"}, children=[
+                        html.Div(html.I(className="bi bi-x-circle-fill", style={"fontSize": "1.5rem", "color": "#ef4444"}), 
+                                 style={"backgroundColor": "rgba(239, 68, 68, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                        html.Div([
+                            html.P("CANCEL RATE", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#ef4444"}),
+                            html.H5(id="kpi-cancellation-rate", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
                         ])
-                    ], width=3, className="ps-1"),
+                    ]), width=3, className="ps-1"),
                 ], className="mb-3"),
                 
                 # Active Selection Indicator
                 html.Div(id="selection-status-div", className="mb-2 text-center", style={"fontSize": "0.9rem", "color": "#94a3b8"}),
                 
                 # Spatial Map Card
-                html.Div(style=STYLES["card"], children=[
-                    html.Div(style=STYLES["card_header"], children=[
-                        html.H5("U.S. Airport Delay Distribution (Map)", style=STYLES["card_header_text"])
+                html.Div(className="premium-card", children=[
+                    html.Div(className="premium-card-header", children=[
+                        html.H5("U.S. Airport Delay Distribution (Map)", className="premium-card-header-text")
                     ]),
-                    html.Div([
+                    html.Div(className="premium-card-body", children=[
                         dcc.Graph(id="delay-spatial-map", style={"height": "480px"}),
                         html.Div([
-                            html.Label("Time of Day Playback (Hour)", style=STYLES["label"]),
+                            html.Label("Time of Day Playback (Hour)", className="premium-label"),
                             dcc.Slider(
                                 id="hour-slider",
                                 min=0, max=23, step=1,
@@ -211,30 +158,30 @@ def get_layout():
                                 tooltip={"placement": "bottom", "always_visible": False}
                             )
                         ], style={"padding": "10px", "marginTop": "5px"})
-                    ], style={"padding": "10px"})
+                    ])
                 ])
             ], xs=12, lg=7, className="mb-4"),
             
             # RIGHT COLUMN: Heatmaps
             dbc.Col([
                 # Day of Week vs Hour
-                html.Div(style=STYLES["card"], className="mb-3", children=[
-                    html.Div(style=STYLES["card_header"], children=[
-                        html.H5("Weekly & Hourly Congestion Grids", style=STYLES["card_header_text"])
+                html.Div(className="premium-card mb-3", children=[
+                    html.Div(className="premium-card-header", children=[
+                        html.H5("Weekly & Hourly Congestion Grids", className="premium-card-header-text")
                     ]),
-                    html.Div([
+                    html.Div(className="premium-card-body", children=[
                         dcc.Graph(id="hourly-weekly-heatmap", style={"height": "320px"})
-                    ], style={"padding": "10px"})
+                    ])
                 ]),
                 
                 # Month vs Day of Month
-                html.Div(style=STYLES["card"], children=[
-                    html.Div(style=STYLES["card_header"], children=[
-                        html.H5("Seasonal & Monthly Calendars", style=STYLES["card_header_text"])
+                html.Div(className="premium-card", children=[
+                    html.Div(className="premium-card-header", children=[
+                        html.H5("Seasonal & Monthly Calendars", className="premium-card-header-text")
                     ]),
-                    html.Div([
+                    html.Div(className="premium-card-body", children=[
                         dcc.Graph(id="monthly-calendar-heatmap", style={"height": "320px"})
-                    ], style={"padding": "10px"})
+                    ])
                 ])
             ], xs=12, lg=5, className="mb-4")
         ]),
@@ -262,7 +209,7 @@ def reset_selected_airport(n_clicks):
     
 # Set selected airport on map click
 @callback(
-    Output("airport-dropdown", "value"),
+    Output("selected-airport-store", "data"),
     Input("delay-spatial-map", "clickData"),
     State("airport-dropdown", "value")
 )
@@ -572,3 +519,11 @@ def update_dashboard(metric, airline, season, selected_airport, hw_click, mc_cli
 
 # Main entrypoint layout reference
 layout = get_layout()
+
+@callback(
+    Output('airport-dropdown', 'value', allow_duplicate=True),
+    Input('global-airport-store', 'data'),
+    prevent_initial_call=True
+)
+def update_heatmap_from_global_store(global_data):
+    return global_data

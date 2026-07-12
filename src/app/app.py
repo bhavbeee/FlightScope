@@ -41,6 +41,9 @@ airport_options = [{"label": "Any Airport", "value": ""}] + [
 # Main Layout
 app.layout = html.Div([
     dcc.Location(id="url", refresh=False),
+    dcc.Store(id='global-airport-store', storage_type='memory', data=None),
+    dcc.Store(id='network-selected-airport-store', storage_type='memory', data=None),
+    dcc.Store(id='selected-airport-store', storage_type='memory', data=None),
     # Navigation Bar with Global Filters
     dbc.Navbar(
         dbc.Container(
@@ -213,6 +216,22 @@ def display_page(pathname):
 for module in [network_explorer, delay_heatmap, airline_dashboard, delay_cause_sankey, high_dim_analytics]:
     if hasattr(module, "register_callbacks"):
         module.register_callbacks(app)
+
+from dash import Input, Output, callback, ctx
+
+@app.callback(
+    Output('global-airport-store', 'data'),
+    Input('network-selected-airport-store', 'data'),
+    Input('selected-airport-store', 'data'),
+    prevent_initial_call=True
+)
+def sync_to_global_store(network_data, heatmap_data):
+    triggered_id = ctx.triggered_id
+    if triggered_id == 'network-selected-airport-store':
+        return network_data
+    elif triggered_id == 'selected-airport-store':
+        return heatmap_data
+    return dash.no_update
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8050))

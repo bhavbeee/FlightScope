@@ -22,35 +22,98 @@ finally:
 # LAYOUT 
 # =====================================================
 layout = html.Div(
-    style={
-        "backgroundColor": "#0B132B",
-        "minHeight": "100vh",
-        "padding": "20px"
-    },
+    className="premium-page-container",
     children=[
         dbc.Row([
             dbc.Col([
-                html.H1("Airline Performance Dashboard", 
-                         style={"color": "#ffffff", "fontWeight": "700", "fontSize": "2.2rem", "letterSpacing": "-0.025em"}, className="mb-1"),
-                html.P("Compare operational efficiency, delay statistics, and cancellation rates across major US carriers.", 
-                        style={"color": "#64748b", "fontSize": "1rem"}, className="mb-3"),
+                html.H1("Airline Performance Dashboard", className="premium-title"),
+                html.P("Compare operational efficiency, delay statistics, and cancellation rates across major US carriers.", className="premium-subtitle"),
             ], width=12)
         ], className="mb-3 mt-1"),
 
+        html.Div(
+            className="premium-filter-section",
+            children=[
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Label("Airline Carrier", className="premium-label"),
+                                dcc.Dropdown(
+                                    id="airline_dropdown",
+                                    options=[{"label": "All Airlines", "value": "ALL"}] + [
+                                        {"label": x, "value": x} for x in airlines
+                                    ],
+                                    value="ALL",
+                                    clearable=False,
+                                    placeholder="Select an Airline...",
+                                    className="dark-dropdown"
+                                )
+                            ],
+                            width=4
+                        )
+                    ]
+                )
+            ]
+        ),
+
+        dbc.Row([
+            dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#191b28", "borderRadius": "12px", "border": "1px solid #242938"}, children=[
+                html.Div(html.I(className="bi bi-airplane-fill", style={"fontSize": "1.5rem", "color": "#0ea5e9"}), 
+                         style={"backgroundColor": "rgba(14, 165, 233, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                html.Div([
+                    html.P("FLIGHTS", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#0ea5e9"}),
+                    html.H5(id="kpi_flights", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
+                ])
+            ]), width=3),
+            
+            dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#161b2a", "borderRadius": "12px", "border": "1px solid #1e293b"}, children=[
+                html.Div(html.I(className="bi bi-clock-history", style={"fontSize": "1.5rem", "color": "#ef4444"}), 
+                         style={"backgroundColor": "rgba(239, 68, 68, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                html.Div([
+                    html.P("AVERAGE DELAY", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#ef4444"}),
+                    html.H5(id="kpi_delay", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
+                ])
+            ]), width=3),
+            
+            dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#1e182d", "borderRadius": "12px", "border": "1px solid #2d2442"}, children=[
+                html.Div(html.I(className="bi bi-check-circle-fill", style={"fontSize": "1.5rem", "color": "#22c55e"}), 
+                         style={"backgroundColor": "rgba(34, 197, 94, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                html.Div([
+                    html.P("ON TIME", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#22c55e"}),
+                    html.H5(id="kpi_ontime", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
+                ])
+            ]), width=3),
+            
+            dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#29211c", "borderRadius": "12px", "border": "1px solid #3d312a"}, children=[
+                html.Div(html.I(className="bi bi-x-circle-fill", style={"fontSize": "1.5rem", "color": "#f97316"}), 
+                         style={"backgroundColor": "rgba(249, 115, 22, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                html.Div([
+                    html.P("CANCELLED", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#f97316"}),
+                    html.H5(id="kpi_cancel", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
+                ])
+            ]), width=3),
+        ], className="mb-4"),
+
         dbc.Row(
             [
                 dbc.Col(
-                    dcc.Dropdown(
-                        id="airline_dropdown",
-                        options=[{"label": "All Airlines", "value": "ALL"}] + [
-                            {"label": x, "value": x} for x in airlines
-                        ],
-                        value="ALL",
-                        clearable=False,
-                        placeholder="Select an Airline...",
-                        style={"color": "#000000", "backgroundColor": "#FFFFFF"}
-                    ),
-                    width=4
+                    html.Div(
+                        className="premium-card",
+                        children=[html.Div(className="premium-card-body", children=[dcc.Graph(id="ranking_fig", config={"responsive": True, "displayModeBar": False}, style={"height":"300px"})])]
+                    ), width=4
+                ),
+                dbc.Col(
+                    html.Div(
+                        className="premium-card",
+                        children=[html.Div(className="premium-card-body", children=[dcc.Graph(id="radar_fig", config={"responsive":True, "displayModeBar":False}, style={"height":"300px"})])]
+                    ), width=4
+                ),
+                dbc.Col(
+                    html.Div(
+                        className="premium-card",
+                        children=[html.Div(className="premium-card-body", children=[dcc.Graph(id="box_fig", config={"responsive":True, "displayModeBar":False}, style={"height":"300px"})])]
+                    ), width=4
                 )
             ],
             className="mb-4"
@@ -59,77 +122,16 @@ layout = html.Div(
         dbc.Row(
             [
                 dbc.Col(
-                    dbc.Card(
-                        [
-                            html.H5("Flights", style={"fontSize": "14px", "fontWeight": "600", "color": "#0ea5e9"}),
-                            html.H2(id="kpi_flights", style={"color": "#0ea5e9", "fontWeight": "bold"})
-                        ],
-                        style={"backgroundColor": "#1a1d2b", "border": "1px solid #0ea5e9", "borderRadius": "8px"}, body=True
-                    ), width=3
+                    html.Div(
+                        className="premium-card",
+                        children=[html.Div(className="premium-card-body", children=[dcc.Graph(id="map_fig", config={"responsive":True, "displayModeBar":True, "scrollZoom":True}, style={"height":"300px"})])]
+                    ), width=8
                 ),
                 dbc.Col(
-                    dbc.Card(
-                        [
-                            html.H5("Average Delay", style={"fontSize": "14px", "fontWeight": "600", "color": "#ef4444"}),
-                            html.H2(id="kpi_delay", style={"color": "#ef4444", "fontWeight": "bold"})
-                        ],
-                        style={"backgroundColor": "#1a1d2b", "border": "1px solid #ef4444", "borderRadius": "8px"}, body=True
-                    ), width=3
-                ),
-                dbc.Col(
-                    dbc.Card(
-                        [
-                            html.H5("On Time", style={"fontSize": "14px", "fontWeight": "600", "color": "#22c55e"}),
-                            html.H2(id="kpi_ontime", style={"color": "#22c55e", "fontWeight": "bold"})
-                        ],
-                        style={"backgroundColor": "#1a1d2b", "border": "1px solid #22c55e", "borderRadius": "8px"}, body=True
-                    ), width=3
-                ),
-                dbc.Col(
-                    dbc.Card(
-                        [
-                            html.H5("Cancelled", style={"fontSize": "14px", "fontWeight": "600", "color": "#f97316"}),
-                            html.H2(id="kpi_cancel", style={"color": "#f97316", "fontWeight": "bold"})
-                        ],
-                        style={"backgroundColor": "#1a1d2b", "border": "1px solid #f97316", "borderRadius": "8px"}, body=True
-                    ), width=3
-                ),
-            ],
-            className="mb-4"
-        ),
-
-        dbc.Row(
-            [
-                dbc.Col(
-                    dbc.Card(dbc.CardBody(
-                        dcc.Graph(id="ranking_fig", config={"responsive": True, "displayModeBar": False}, style={"height":"300px"})
-                    ), style={"backgroundColor": "#1a1d2b", "border": "none", "borderRadius": "8px", "padding": "10px"}), width=4
-                ),
-                dbc.Col(
-                    dbc.Card(dbc.CardBody(
-                        dcc.Graph(id="radar_fig", config={"responsive":True, "displayModeBar":False}, style={"height":"300px"})
-                    ), style={"backgroundColor": "#1a1d2b", "border": "none", "borderRadius": "8px", "padding": "10px"}), width=4
-                ),
-                dbc.Col(
-                    dbc.Card(dbc.CardBody(
-                        dcc.Graph(id="box_fig", config={"responsive":True, "displayModeBar":False}, style={"height":"300px"})
-                    ), style={"backgroundColor": "#1a1d2b", "border": "none", "borderRadius": "8px", "padding": "10px"}), width=4
-                )
-            ],
-            className="mb-4"
-        ),
-
-        dbc.Row(
-            [
-                dbc.Col(
-                    dbc.Card(dbc.CardBody(
-                        dcc.Graph(id="map_fig", config={"responsive":True, "displayModeBar":True, "scrollZoom":True}, style={"height":"300px"})
-                    ), style={"backgroundColor": "#1a1d2b", "border": "none", "borderRadius": "8px", "padding": "10px"}), width=8
-                ),
-                dbc.Col(
-                    dbc.Card(dbc.CardBody(
-                        dcc.Graph(id="duration_fig", config={"responsive": True, "displayModeBar": False}, style={"height":"300px"})
-                    ), style={"backgroundColor": "#1a1d2b", "border": "none", "borderRadius": "8px", "padding": "10px"}), width=4
+                    html.Div(
+                        className="premium-card",
+                        children=[html.Div(className="premium-card-body", children=[dcc.Graph(id="duration_fig", config={"responsive": True, "displayModeBar": False}, style={"height":"300px"})])]
+                    ), width=4
                 ),
             ],
             className="mb-4"
@@ -155,10 +157,11 @@ def register_callbacks(app):
         ],
         [
             Input("airline_dropdown", "value"),
-            Input("global-route-store", "data")
+            Input("global-route-store", "data"),
+            Input("global-airport-store", "data")
         ]
     )
-    def update_cards(selected, route_data):
+    def update_cards(selected, route_data, global_airport):
         conn = get_db_connection()
         try:
             o_state = route_data.get("origin_state") if route_data else None
@@ -167,6 +170,7 @@ def register_callbacks(app):
             d_airport = route_data.get("dest_airport") if route_data else None
 
             where_global, params_global = _build_where_clause(
+                airport=global_airport,
                 origin_state=o_state, dest_state=d_state, 
                 origin_airport=o_airport, dest_airport=d_airport
             )
@@ -192,6 +196,7 @@ def register_callbacks(app):
             # Airline specific where clause
             if selected != "ALL":
                 where_spec, params_spec = _build_where_clause(
+                    airport=global_airport,
                     airline=selected, origin_state=o_state, dest_state=d_state, 
                     origin_airport=o_airport, dest_airport=d_airport
                 )

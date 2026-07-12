@@ -12,29 +12,7 @@ except Exception:
     pass
 
 # ── Shared inline styles ──────────────────────────────────────────────
-LABEL_STYLE = {
-    "fontSize": "0.7rem", "fontWeight": "600", "color": "#94a3b8",
-    "textTransform": "uppercase", "letterSpacing": "0.05em", "marginBottom": "2px",
-}
-CARD_BG = "#111318"
-KPI_CARD_STYLE = {
-    "background": "linear-gradient(135deg, #151822 0%, #1a1f2e 100%)",
-    "border": "1px solid #242938", "borderRadius": "10px",
-    "padding": "10px 14px", "textAlign": "center",
-}
-KPI_TITLE_STYLE = {"fontSize": "0.65rem", "color": "#64748b", "textTransform": "uppercase", "margin": "0"}
-KPI_VALUE_STYLE = {"fontSize": "1.25rem", "fontWeight": "700", "margin": "2px 0 0 0"}
-FILTER_SECTION_STYLE = {
-    "background": "linear-gradient(135deg, #111318 0%, #141820 100%)",
-    "border": "1px solid #1e293b", "borderRadius": "12px",
-    "padding": "14px 18px", "marginBottom": "10px",
-}
-STATUS_BADGE_STYLE = {
-    "background": "linear-gradient(90deg, #0f172a 0%, #1e293b 100%)",
-    "border": "1px solid #334155", "borderRadius": "20px",
-    "padding": "5px 16px", "display": "inline-block", "fontSize": "0.8rem",
-}
-
+# Moved to premium.css
 
 def get_layout():
     airlines = get_airlines()
@@ -53,29 +31,26 @@ def get_layout():
     ]
 
     return html.Div(
-        style={"padding": "12px 16px"},
+        className="premium-page-container",
         children=[
-            dcc.Store(id="network-selected-airport-store", data=None),
 
             # ── Title ──────────────────────────────────────────────
             html.Div([
-                html.H1("Air Traffic Network Explorer", 
-                         style={"color": "#ffffff", "fontWeight": "700", "fontSize": "2.2rem", "letterSpacing": "-0.025em"}, className="mb-1"),
-                html.P("Explore hub airports, busy routes, and state-to-state connectivity across the US flight network.",
-                        style={"color": "#64748b", "fontSize": "1rem"}, className="mb-3"),
+                html.H1("Air Traffic Network Explorer", className="premium-title"),
+                html.P("Explore hub airports, busy routes, and state-to-state connectivity across the US flight network.", className="premium-subtitle"),
             ]),
 
             # ── Row 1: Core filters ───────────────────────────────
-            html.Div(style=FILTER_SECTION_STYLE, children=[
+            html.Div(className="premium-filter-section", children=[
                 dbc.Row([
                     dbc.Col([
-                        html.Div("Airline", style=LABEL_STYLE),
+                        html.Div("Airline", className="premium-label"),
                         dcc.Dropdown(id="network-airline-dropdown", options=airline_options,
                                      value="", clearable=False, className="dark-dropdown",
                                      style={"fontSize": "0.85rem"}),
                     ], lg=4, md=6, sm=12),
                     dbc.Col([
-                        html.Div("Season", style=LABEL_STYLE),
+                        html.Div("Season", className="premium-label"),
                         dcc.Dropdown(
                             id="network-season-dropdown",
                             options=[
@@ -90,7 +65,7 @@ def get_layout():
                         ),
                     ], lg=3, md=6, sm=12),
                     dbc.Col([
-                        html.Div("Top N routes", style=LABEL_STYLE),
+                        html.Div("Top N routes", className="premium-label"),
                         dcc.Slider(
                             id="network-topn-slider",
                             min=50, max=2000, step=None,
@@ -110,35 +85,53 @@ def get_layout():
 
             # ── KPI strip ─────────────────────────────────────────
             dbc.Row([
-                dbc.Col(html.Div(style=KPI_CARD_STYLE, children=[
-                    html.P("Airports", style=KPI_TITLE_STYLE),
-                    html.H5(id="network-kpi-airports", style={**KPI_VALUE_STYLE, "color": "#38bdf8"}),
+                dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#191b28", "borderRadius": "12px", "border": "1px solid #242938"}, children=[
+                    html.Div(html.I(className="bi bi-airplane-fill", style={"fontSize": "1.5rem", "color": "#a78bfa"}), 
+                             style={"backgroundColor": "rgba(167, 139, 250, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                    html.Div([
+                        html.P("AIRPORTS", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#a78bfa"}),
+                        html.H5(id="network-kpi-airports", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
+                    ])
                 ]), lg=3, md=3, sm=6),
-                dbc.Col(html.Div(style=KPI_CARD_STYLE, children=[
-                    html.P("Routes", style=KPI_TITLE_STYLE),
-                    html.H5(id="network-kpi-routes", style={**KPI_VALUE_STYLE, "color": "#34d399"}),
+                
+                dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#161b2a", "borderRadius": "12px", "border": "1px solid #1e293b"}, children=[
+                    html.Div(html.I(className="bi bi-diagram-3-fill", style={"fontSize": "1.5rem", "color": "#38bdf8"}), 
+                             style={"backgroundColor": "rgba(56, 189, 248, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                    html.Div([
+                        html.P("ROUTES", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#38bdf8"}),
+                        html.H5(id="network-kpi-routes", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
+                    ])
                 ]), lg=3, md=3, sm=6),
-                dbc.Col(html.Div(style=KPI_CARD_STYLE, children=[
-                    html.P("Top Hub (PageRank)", style=KPI_TITLE_STYLE),
-                    html.H5(id="network-kpi-hub", style={**KPI_VALUE_STYLE, "color": "#a78bfa"}),
+                
+                dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#1e182d", "borderRadius": "12px", "border": "1px solid #2d2442"}, children=[
+                    html.Div(html.I(className="bi bi-building", style={"fontSize": "1.5rem", "color": "#c084fc"}), 
+                             style={"backgroundColor": "rgba(192, 132, 252, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                    html.Div([
+                        html.P("TOP HUB (PAGERANK)", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#c084fc"}),
+                        html.H5(id="network-kpi-hub", className="premium-kpi-value", style={"color": "#ffffff", "margin": "0", "textAlign": "left", "fontSize": "1.8rem"}),
+                    ])
                 ]), lg=3, md=3, sm=6),
-                dbc.Col(html.Div(style=KPI_CARD_STYLE, children=[
-                    html.P("Busiest Route", style=KPI_TITLE_STYLE),
-                    html.H5(id="network-kpi-busiest", style={**KPI_VALUE_STYLE, "color": "#fbbf24"}),
+                
+                dbc.Col(html.Div(className="premium-kpi-card", style={"display": "flex", "alignItems": "center", "textAlign": "left", "padding": "15px", "backgroundColor": "#29211c", "borderRadius": "12px", "border": "1px solid #3d312a"}, children=[
+                    html.Div(html.I(className="bi bi-airplane-engines-fill", style={"fontSize": "1.5rem", "color": "#fbbf24"}), 
+                             style={"backgroundColor": "rgba(251, 191, 36, 0.15)", "padding": "12px 16px", "borderRadius": "8px", "marginRight": "15px"}),
+                    html.Div([
+                        html.P("BUSIEST ROUTE", className="premium-kpi-title", style={"margin": "0", "textAlign": "left", "color": "#fbbf24"}),
+                        html.H5(id="network-kpi-busiest", className="premium-kpi-value", style={"color": "#fbbf24", "margin": "0", "textAlign": "left", "fontSize": "1.6rem"}),
+                    ])
                 ]), lg=3, md=3, sm=6),
             ], className="g-2 mb-2"),
 
             # ── Map ───────────────────────────────────────────────
-            dbc.Card(
-                dbc.CardBody(
+            html.Div(
+                className="premium-card",
+                children=[
                     dcc.Graph(
                         id="network-map-graph", 
                         style={"height": "72vh"}, 
                         config={"responsive": True, "displayModeBar": True, "scrollZoom": True}
-                    ),
-                    style={"padding": "6px"},
-                ),
-                style={"background": CARD_BG, "border": "1px solid #1e293b", "borderRadius": "12px"},
+                    )
+                ]
             ),
         ],
     )
@@ -218,11 +211,15 @@ def update_network(airline, season, top_n, selected_airport, route_data):
     if parts:
         badge_text = " · ".join(parts)
         status_badge = html.Span(badge_text, style={
-            **STATUS_BADGE_STYLE, "color": "#f0abfc",
+            "fontSize": "0.85rem", "fontWeight": "600", "padding": "6px 12px", 
+            "borderRadius": "20px", "backgroundColor": "rgba(255,255,255,0.05)", 
+            "border": "1px solid rgba(255,255,255,0.1)", "color": "#f0abfc",
         })
     else:
         status_badge = html.Span("🌐 National Network Overview", style={
-            **STATUS_BADGE_STYLE, "color": "#34d399",
+            "fontSize": "0.85rem", "fontWeight": "600", "padding": "6px 12px", 
+            "borderRadius": "20px", "backgroundColor": "rgba(255,255,255,0.05)", 
+            "border": "1px solid rgba(255,255,255,0.1)", "color": "#34d399",
         })
 
     # ── Fetch data ────────────────────────────────────────────────
