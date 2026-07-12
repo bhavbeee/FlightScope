@@ -47,7 +47,8 @@ layout = html.Div(
                                     value="ALL",
                                     clearable=False,
                                     placeholder="Select an Airline...",
-                                    className="dark-dropdown"
+                                    className="dark-dropdown",
+                                    style={"color": "#000000", "backgroundColor": "#FFFFFF"}
                                 )
                             ],
                             width=4

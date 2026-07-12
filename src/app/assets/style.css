@@ -33,7 +33,7 @@ body {
 .dark-dropdown .Select-placeholder,
 .dark-dropdown .Select-input,
 .dark-dropdown .Select-input input {
-    color: #ffffff !important;
+    color: #000000 !important;
     background-color: transparent !important;
 }
 

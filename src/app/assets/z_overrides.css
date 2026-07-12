@@ -129,22 +129,39 @@ body {
     color: var(--text) !important;
 }
 
-/* Force ALL Dropdowns to be dark, fixing the white background issue */
+/* Force ALL Dropdowns to be white with black text */
 .Select-control,
 .Select-menu-outer,
 .Select-value,
-.Select-input {
-    background-color: #273970 !important; /* Hardcoded light-blue to prevent white fallback */
-    color: #FFFFFF !important;
-    border: 1px solid rgba(120,120,255,0.3) !important;
+.Select-value-label,
+.Select-placeholder,
+.Select-input,
+.Select-input input {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
 }
 
-.Select-value-label, .Select-placeholder {
-    color: #FFFFFF !important;
+.Select-control {
+    border: none !important;
+    box-shadow: none !important;
 }
 
-.dark-dropdown .Select-control {
-    background-color: #273970 !important;
+/* Specific override for the dark-dropdown class just in case */
+.dark-dropdown .Select-control,
+.dark-dropdown .Select-value,
+.dark-dropdown .Select-value-label,
+.dark-dropdown .Select-placeholder,
+.dark-dropdown .Select-input input {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+}
+
+.dark-dropdown * {
+    color: #000000 !important;
+}
+
+#airline_dropdown * {
+    color: #000000 !important;
 }
 
 .premium-nav-link {
